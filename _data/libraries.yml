@@ -1,0 +1,19 @@
+DearImGui:
+  name: Dear ImGui
+  desc: GUI library for creating UI widgets on top of a window.
+        Generally used for debug windows, but can be used for application layout (as I often do).
+  link: https://github.com/ocornut/imgui
+Glad:
+  name: glad
+  desc: Library for interfacing with the GPU through OpenGL.
+  link: https://www.khronos.org/
+GLM:
+  name: glm
+  desc: Utility library with useful data structures and functions for graphics and 3D maths, matching those seen in
+        glsl (e.g. vec3, mat4, normalize).
+  link: https://github.com/g-truc/glm
+SDL2:
+  name: SDL2
+  desc: GUI library for C++, used to create the main application window and handle user input events.
+        Often used for games and simulations.
+  link: https://www.libsdl.org/
