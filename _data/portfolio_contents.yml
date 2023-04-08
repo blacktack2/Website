@@ -1,0 +1,10 @@
+- title: Clusters Simulation (C++)
+  link: portfolio/Clusters.html
+  image: /assets/videos/clusters/StartRandomEquidistant_Static.gif
+  video: /assets/videos/clusters/StartRandomEquidistant.gif
+  alt: Example video of the clusters simulation application
+- title: Cellular Automata (C++) WIP
+  link: portfolio/CellularAutomata.html
+  image: /assets/videos/cellular_automata/B1S1357G100_Static.gif
+  video: /assets/videos/cellular_automata/B1S1357G100.gif
+  alt: Example video of the cellular automata application

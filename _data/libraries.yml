@@ -17,3 +17,7 @@ SDL2:
   desc: GUI library for C++, used to create the main application window and handle user input events.
         Often used for games and simulations.
   link: https://www.libsdl.org/
+STB:
+  name: stb
+  desc: Utility library for reading and writing textures/images.
+  link: https://github.com/nothings/stb

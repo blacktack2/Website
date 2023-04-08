@@ -3,8 +3,12 @@ layout: page
 title: Portfolio
 ---
 
-<a href="portfolio/Clusters.html">
-    <img src="/assets/videos/clusters/StartRandomEquidistant_Static.gif" alt="Example video of the clusters simulation" width="40%"
-        onmouseover="this.src = '/assets/videos/clusters/StartRandomEquidistant.gif';" onmouseout="this.src = '/assets/videos/clusters/StartRandomEquidistant_Static.gif'" /><br />
-    <h2>Clusters Simulation (C++)</h2>
-</a>
+{% for item in site.data.portfolio_contents %}
+    <div style="float: left; padding: 4px; text-align: center;">
+        <a href="{{ item.link }}">
+            <img src="{{ item.image }}" alt="{{ item.alt }}" width="400" height="400" />
+            <br />
+            <h2>{{ item.title }}</h2>
+        </a>
+    </div>
+{% endfor %}

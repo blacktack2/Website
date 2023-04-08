@@ -1,0 +1,107 @@
+---
+layout: portfolio
+title: Cellular Automata (WIP)
+repo: https://github.com/blacktack2/CellularAutomata
+---
+
+<img src="/assets/images/cellular_automata/Application.png" alt="Image of the application main screen" height="400" />
+
+<p>
+    This Cellular Automata application is a C++ project with the aim of being able to simulate different types of Cellular Automata, including
+    life-like (2D and 3D), continuous (smooth-life), and various animation-like simulations (e.g. fire simulations, water simulations, etc.).
+    <b>Currently I only have 2D-life-like implemented</b>.
+</p>
+<p>
+    I have always enjoyed making Cellular Automata simulations, ever since I first learned about Conway's Game of Life. At some point, I began
+    to treat Game of Life as hello world code for any new programming language I've learned, though now I've expanded this to making general
+    life-like Cellular Automata.
+</p>
+<p>
+    In the past, I have programmed Conway's Game of Life, or general life-like Cellular Automata, in at least the following languages:
+</p>
+
+<ul>
+    <li>C</li>
+    <li>C++</li>
+    <li>Unity</li>
+    <li>hlsl (via Unity)</li>
+    <li>glsl</li>
+    <li>Python</li>
+    <li>Java</li>
+    <li>JavaScript</li>
+    <li>Arduino</li>
+    <li>Netlogo</li>
+    <li>Scratch</li>
+</ul>
+
+<p>
+    See below for a simple JavaScript version of this simulation.
+</p>
+
+<h2>What are Cellular Automata?</h2>
+
+<p>
+    A Cellular Automaton is a simulation predicated on simple rules. The common example of this is Conway's Game of Life, in
+    which you begin with a grid of cells, with each cell either being alive or dead. Every iteration, each cell in the grid will
+    look at the eight neighbouring cells (the moore neighbourhood) and if a dead cell is surrounded by exactly three live cells,
+    it will become alive (due to reproduction). If a live cell is surrounded by fewer than two or more than three live cells it
+    will die (due to underpopulation or overpopulation respectively).
+</p>
+
+<p>
+    See the wiki <a href="https://en.wikipedia.org/wiki/Cellular_automaton">here</a> for more details on Cellular Automata
+    and <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">here</a> for more on Conway's Game of Life.
+</p>
+
+<img src="/assets/videos/cellular_automata/Conway.gif" alt="Example video showcasing Conway's Game of Life" width="500" height="500" />
+
+<p>
+    <b>Conway's Game of Life</b>
+</p>
+
+<h3>Notation</h3>
+
+<p>
+    The notation I use to define the rules for a 2D life-like Cellular Automaton is the BSG notation, in which each of the components
+    B-S-G are followed by numbers. The numbers following B indicate the number of neighbours a dead cell must have to become alive. The
+    numbers following S indicate the number of neighbours a live cell must have to stay alive. And the number following G indicate the
+    number of generations (how many iterations it takes for a dead cell to be viable for life again).
+</p>
+
+<p>
+    With this notation, Conway's Game of Life would be notated as B3S23 (with G being ommitted for values of 1). B3 indicating exactly
+    three neighbours are required to be born, and S23 indicating two or three neighbours are required to survive.
+</p>
+
+<h2>Libraries</h2>
+
+<table>
+    {% include library_description.html lib=site.data.libraries.DearImGui %}
+    {% include library_description.html lib=site.data.libraries.Glad %}
+    {% include library_description.html lib=site.data.libraries.GLM %}
+    {% include library_description.html lib=site.data.libraries.SDL2 %}
+    {% include library_description.html lib=site.data.libraries.STB %}
+</table>
+
+<h2>Examples</h2>
+
+<table>
+    <tr>
+        <td><img src="/assets/videos/cellular_automata/Conway.gif" alt="Video of Conway's Game of Life" width="300" height="300" /></td>
+        <td><img src="/assets/videos/cellular_automata/DayAndNight.gif" alt="Video of Day and Night" width="300" height="300" /></td>
+    </tr>
+    <tr>
+        <th>Conway's Game of Life (B3S23)</th>
+        <th>Day and Night (B3678S34678)</th>
+    </tr>
+    <tr>
+        <td><img src="/assets/videos/cellular_automata/Replicator.gif" alt="Video of Replicator" width="300" height="300" /></td>
+        <td><img src="/assets/videos/cellular_automata/B1S1357G100.gif" alt="Video of B1S1357G100" width="300" height="300" /></td>
+    </tr>
+    <tr>
+        <th>Replicator (B1357S1357)</th>
+        <th>B1S1357G100</th>
+    </tr>
+</table>
+
+{% include /web_apps/cellular_automata.html %}
