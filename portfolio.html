@@ -6,7 +6,7 @@ title: Portfolio
 {% for item in site.data.portfolio_contents %}
     <div style="float: left; padding: 4px; text-align: center;">
         <a href="{{ item.link }}">
-            <img src="{{ item.image }}" alt="{{ item.alt }}" width="400" height="400" />
+            <img src="{{ item.preview }}preview_static.gif" alt="{{ item.alt }}" onmouseenter="this.src = '{{ item.preview }}preview.gif'" onmouseleave="this.src = '{{ item.preview }}preview_static.gif'" width="400" height="400" />
             <br />
             <h2>{{ item.title }}</h2>
         </a>
