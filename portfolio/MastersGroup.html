@@ -4,7 +4,7 @@ title: PaintHell - Masters Group Project
 repo: https://github.com/blacktack2/MastersGroupProject2023
 ---
 
-<img src="/assets/images/masters_group/Scene.png" alt="Image of gameplay" height="400" />
+<img src="/assets/images/masters_group/Paint.png" alt="Image of gameplay" height="400" />
 
 <p>
     During the second semester of my Masters course (MSComp Computer Science - Game Engineering 4<sup>th</sup> year)
@@ -206,3 +206,21 @@ repo: https://github.com/blacktack2/MastersGroupProject2023
 </p>
 
 <img src="/assets/images/masters_group/MainMenu.png" alt="Main Menu" width="400" />
+
+<h2>Play Station 4</h2>
+
+<p>
+    PS4 integration was mainly handled by Daniel, though I did spend the final week helping port our game over, and many of
+    my design choices were with platform agnosticism in mind. Due to troubles with admin rights in the computer cluster we
+    ended up with little time to implement the PS4 version of the game. As such, while we do have a working PS4 version, it
+    is nowhere near as fully realised as the Windows version.
+</p>
+<p>
+    Daniel was able to get the full gameplay and physics system working fine, since these are platform agnostic to begin with.
+    The main issue came with the graphics system, in which he and I attempted to convert the existing OpenGL code to the PS4
+    equivalents. Even though much of my render system was designed to make porting easier, there were many structural
+    differences which made it difficult to port directly (such as how OpenGL doesn't care which shader pass a given uniform
+    goes to, while PS4 requires uniforms to be sent only to the correct pass). Since we didn't know what PS4 would require
+    until late into the project we ended up with many incompatibilities and decided it would take too long to directly port
+    the existing project.
+</p>
