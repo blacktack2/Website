@@ -8,7 +8,7 @@ title: Portfolio
         <a href="{{ item.link }}">
             <img src="{{ item.preview }}preview_static.gif" alt="{{ item.alt }}" onmouseenter="this.src = '{{ item.preview }}preview.gif'" onmouseleave="this.src = '{{ item.preview }}preview_static.gif'" width="400" height="400" />
             <br />
-            <h2>{{ item.title }}</h2>
+            <p class="portfolio-title">{{ item.title }}</p>
         </a>
     </div>
 {% endfor %}

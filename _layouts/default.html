@@ -4,9 +4,22 @@
     <title>{{ page.title }}</title>
       <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/styles.css">
   </head>
+
   <body>
-    {% include navigation.html %}
-    <hr>
-    {{ content }}
+    <div class="main-container">
+      <div class="banner banner-left"></div>
+
+      <div class="main-column">
+        {% include navigation.html %}
+
+        <hr>
+
+        <div class="main-body">
+        {{ content }}
+        </div>
+      </div>
+
+      <div class="banner banner-right"></div>
+    </div>
   </body>
 </html>
