@@ -3,3 +3,206 @@ layout: portfolio
 title: PaintHell - Masters Group Project
 repo: https://github.com/blacktack2/MastersGroupProject2023
 ---
+
+<img src="/assets/images/masters_group/Scene.png" alt="Image of gameplay" height="400" />
+
+<p>
+    During the second semester of my Masters course (MSComp Computer Science - Game Engineering 4<sup>th</sup> year)
+    I was tasked with building a 3D game, alongside a group of eight people (myself included). The theme for this project
+    was Splatoon, with a particular focus on the paint mechanic.
+</p>
+<p>
+    My primary responsibility in this group was with Graphics, though I did delve into most areas of the project. The initial
+    framework for our project was built on top of my submission for the previous
+    <a href="/portfolio/MastersPhysics.html">Physics Coursework</a> (which in turn was built on a framework provided by Richard
+    Davidson, one of our lecturers).
+</p>
+<p>
+    The other members of my group were as follows:
+</p>
+
+<ul>
+    <li>Daniel T. Abraham</li>
+    <li>Harry G. Brettell</li>
+    <li>Cho Hin Chiu (Felix)</li>
+    <li>Yifei Hu</li>
+    <li>Sashwat Kashyap (Kash)</li>
+    <li>Shantao. Liu</li>
+    <li>Xiaoyang Liu</li>
+</ul>
+
+<h2>Development</h2>
+
+<h3>Graphics</h3>
+
+<p>
+    Many of the techniques I discuss here are based on <a href="https://learnopengl.com/">these tutorials</a>. Take a look if you're
+    interested in a more in-depth look at how specific techniques are done.
+</p>
+<p>
+    The first major thing I did for this project was to overhaul the render pipeline. Originally, my physics coursework made no changes
+    to the rendering framework provided (as there was no need), so all of the rendering code was found in a few member functions
+    of the GameTechRenderer class.
+</p>
+<p>
+    My solution to this was to build a render-pass system in which we could extend a base RenderPass class for each major part of the
+    render pipeline and have the renderer build a list of passes which it will iterate through during the mainloop. Over time I extended
+    this structure to differentiate between different types of render passes, with main passes (rendering to the GBuffer), post-processing
+    passes (applying effects to an already drawn scene), and overlay passes (drawing on top of the backbuffer).
+</p>
+<p>
+    The following diagram roughly outlines the final full render pipeline:
+</p>
+
+<img src="/assets/images/masters_group/PipelineUML.png" alt="UML diagram of the render pipeline" width="400" />
+<p>
+    Many of the systems I made for this project's render pipeline were designed to be platform agnostic. Data structures, like textures
+    and framebuffers, were encapsulated in base classes which hold public member functions for all the functionality one would need when
+    handling them. Specific implementations (in particular OpenGL and PS4) would then extend these base classes, with per-platform
+    code to handle the actual API calls (i.e. <code>Shader.Bind()</code> would use <code>glUseProgram()</code> for OpenGL, and configure a
+    <code>GnmxGfxContext</code> for PS4). This was mainly done to allow easier porting to PS4, though unfortunately we never fully got
+    around to this.
+</p>
+
+<h4>Painting Pass</h4>
+<p>
+    This pass takes in every model with a paint texture, and writes to the texture any new paint splats which have occured since
+    the previous frame. The results are then used later in the model pass to inform the albedo of a model.
+</p>
+
+<h4>Skybox</h4>
+<p>
+    A <b>procedural skybox</b> is generated using the same code from my <a href="/portfolio/MastersGraphics.html">Graphics Coursework</a>.
+    The skybox is configurable, allowing for a dynamic sun direction and varying amounts of cumulus and cirrus clouds. The clouds
+    are generated using simplex noise, skewed to account for perspective. Mie scattering and Reyleigh scattering calculations are
+    used to generate the actual sky.
+</p>
+<p>
+    The code used for the skybox was originally sourced from <a href="https://github.com/shff/opengl_sky">here</a>.
+</p>
+<p>
+    Output texture for this pass:
+</p>
+
+<img src="/assets/images/masters_group/FullSceneSkybox.png" alt="Example of the procedural skybox" width="400" />
+
+<h4>Model</h4>
+<p>
+    Models with a RenderObject are drawn to the GBuffer, filling in textures for albedo, normal (with <b>bump-mapping</b>,
+    and <b>parallax-mapping</b>), <b>specular-mapping</b>, and depth.
+</p>
+<p>
+    <b>Animations</b> (seen with the player character and the boss) were originally done by Sean, though I did go through and overhaul it
+    to fix some bugs and make it better fit with the structure of our project.
+</p>
+<p>
+    Output textures for this pass:
+</p>
+
+<img src="/assets/images/masters_group/FullSceneAlbedo.png" alt="GBuffer albedo texture" width="400" />
+
+<img src="/assets/images/masters_group/FullSceneNormal.png" alt="GBuffer normal texture" width="400" />
+
+<img src="/assets/images/masters_group/FullSceneSpecMap.png" alt="GBuffer spec-map texture" width="400" />
+
+<img src="/assets/images/masters_group/FullSceneDepth.png" alt="GBuffer depth texture" width="400" />
+
+<h4>Lighting</h4>
+<p>
+    The final scene in our game only uses a single directional light for the sun (though functionality exists for multiple
+    lights, as well as point and spot lights). Lighting is calculated using the <b>Blinn-Phong</b> reflection model, with <b>shadow mapping</b>
+    to cast per-light-source shadows. The spec-map texture generated during the model pass is also used here to weight the amount
+    of specular light a given surface can have.
+</p>
+<p>
+    Output texture for the main directional light's shadow map:
+</p>
+
+<img src="/assets/images/masters_group/FullSceneShadows.png" alt="Directional light shadow map texture" width="400" />
+
+<p>
+    Output textures for this pass:
+</p>
+
+<img src="/assets/images/masters_group/FullSceneDiffuse.png" alt="GBuffer diffuse texture" width="400" />
+
+<img src="/assets/images/masters_group/FullSceneSpecular.png" alt="GBuffer specular texture" width="400" />
+
+<h4>SSAO (Screen-Space Ambient Occlusion)</h4>
+<p>
+    Ambient occlusion is generated using 64 kernels with a radius of 0.5 (about half the player's radius). All parameters
+    are configurable, with the kernels handled via SSBO to allow resizing.
+</p>
+<p>
+    Output texture for this pass:
+</p>
+
+<img src="/assets/images/masters_group/FullSceneSSAO.png" alt="GBuffer SSAO texture" width="400" />
+
+<h4>Combine</h4>
+<p>
+    This pass takes all elements of the GBuffer and combines them into a single output texture. It is here that
+    the final lighting calculations occur, combining the skybox, albedo, diffuse, specular, and ambient occlusion.
+    Different modes have also been added for debug purposes allowing to switch to only rendering certain textures,
+    like the depth or normal textures.
+</p>
+<p>
+    This pass also marks the end of the main stage of the render pipeline, with the next passes being
+    post-processing effects.
+</p>
+<p>
+    Output texture for this pass:
+</p>
+
+<img src="/assets/images/masters_group/FullSceneNoHUD.png" alt="Full scene texture" width="400" />
+
+<h4>Bloom</h4>
+<p>
+    Though barely visible in the final project, due to a lack of bright objects, physically based bloom is generated
+    during this pass. This is done by downsampling then upsampling the scene to create a blurry texture, which is
+    then added back to the original scene to create the bloom effect.
+</p>
+
+<h4>HDR (High Dynamic Range)</h4>
+<p>
+    Though I didn't have the time to implement automatic eye adjustment, I was able to implement HDR. This pass is very
+    simple, taking a single exposure parameter to increase or decrease the overall brightness of the image.
+</p>
+
+<h4>Presentation</h4>
+<p>
+    This pass takes the final texture of post-processing and draws it directly to the backbuffer, with <b>gamma correction</b>
+    applied. All remaining passes are overlay passes, which draw on top of this scene.
+</p>
+
+<h4>HUD</h4>
+<p>
+    This pass was created by another group member, though I did help fix a few bugs in it. The main purpose of the HUD pass is
+    to draw health bars, done via drawing textures to quads using the same shader as the menu pass.
+</p>
+
+<h4>Debug</h4>
+<p>
+    In the original framework from Richard Davidson, debug text and lines were drawn by filling static lists of vertex and uv
+    information, which would then be used at the end of the render-pipeline. I took this system and plugged it into it's own
+    render pass, as well as making it platform agnostic to fit the rest of my redesigned framework.
+</p>
+
+<p>
+    Fully rendered scene:
+</p>
+
+<img src="/assets/images/masters_group/FullScene.png" alt="Full scene" width="400" />
+
+<h4>Menu</h4>
+<p>
+    This pass was created by Yifei, with my assistance. I also redesigned much of the menu system to use a nested structure,
+    allowing for widgets to have child widgets which are recursively drawn. Individual components are drawn as textured quads,
+    using a texture matrix to offset and scale the vertices to their correct positions.
+</p>
+
+<p>
+    Main menu:
+</p>
+
+<img src="/assets/images/masters_group/MainMenu.png" alt="Main Menu" width="400" />
