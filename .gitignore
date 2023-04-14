@@ -1,5 +1,10 @@
-.jekyll-cache/
-Gemfile.lock
+# https://github.com/github/gitignore/blob/main/Jekyll.gitignore
 _site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+.bundle/
+vendor/
 
+Gemfile.lock
 untracked/
