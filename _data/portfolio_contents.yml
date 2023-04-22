@@ -1,15 +1,15 @@
-- title: PaintHell (C++) <br /> Masters Group Project
+- title: PaintHell (C++) Masters Group Project
   link: portfolio/MastersGroup.html
   preview: /assets/videos/masters_group/
   alt: Example image/video of the PaintHell game
-- title: Clusters Simulation (C++)
-  link: portfolio/Clusters.html
-  preview: /assets/videos/clusters/
-  alt: Example image/video of the clusters simulation application
 - title: Masters Graphics Coursework (C++)
   link: portfolio/MastersGraphics.html
   preview: /assets/videos/masters_graphics/
   alt: Example image/video of my Masters Graphics Coursework
+- title: Clusters Simulation (C++)
+  link: portfolio/Clusters.html
+  preview: /assets/videos/clusters/
+  alt: Example image/video of the clusters simulation application
 - title: Cellular Automata (C++) WIP
   link: portfolio/CellularAutomata.html
   preview: /assets/videos/cellular_automata/

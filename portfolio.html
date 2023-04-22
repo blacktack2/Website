@@ -3,16 +3,14 @@ layout: page
 title: Portfolio
 ---
 
-<table class="portfolio-table">
+<div class="portfolio-container">
     {% for item in site.data.portfolio_contents %}
-        {% cycle "<tr>", "" %}
-            <td>
-                <a href="{{ item.link }}">
-                    <img src="{{ item.preview }}preview_static.gif" alt="{{ item.alt }}" onmouseenter="this.src = '{{ item.preview }}preview.gif'" onmouseleave="this.src = '{{ item.preview }}preview_static.gif'" width="400" height="400" />
-                    <br />
-                    <p class="portfolio-title">{{ item.title }}</p>
-                </a>
-            </td>
-        {% cycle "", "</tr>" %}
+        <div class="portfolio-item">
+            <a href="{{ item.link }}">
+                <img src="{{ item.preview }}preview_static.gif" alt="{{ item.alt }}" onmouseenter="this.src = '{{ item.preview }}preview.gif'" onmouseleave="this.src = '{{ item.preview }}preview_static.gif'" width="250" height="250" />
+                <br />
+                <p class="portfolio-title">{{ item.title }}</p>
+            </a>
+        </div>
     {% endfor %}
-</table>
+</div>
