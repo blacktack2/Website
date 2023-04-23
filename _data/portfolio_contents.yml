@@ -2,6 +2,10 @@
   link: portfolio/MastersGroup.html
   preview: /assets/videos/masters_group/
   alt: Example image/video of the PaintHell game
+- title: Masters Physics Coursework (C++)
+  link: portfolio/MastersPhysics.html
+  preview: /assets/videos/masters_physics/
+  alt: Example image/video of my Masters Physics Coursework
 - title: Masters Graphics Coursework (C++)
   link: portfolio/MastersGraphics.html
   preview: /assets/videos/masters_graphics/
