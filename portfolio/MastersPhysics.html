@@ -3,3 +3,210 @@ layout: portfolio
 title: Masters Physics Project
 repo: https://github.com/blacktack2/CSC8503_Coursework
 ---
+
+<img src="/assets/images/masters_physics/Scene.png" alt="Example image of a scene" height="400" />
+
+<p>
+    At the end of the first semester of my Masters course (MSComp Computer Science - Game Engineering 4<sup>th</sup> year)
+    I was tasked with building a the physics component of a 3D game, with the goal of implementing as many features covered
+    during teaching, and any additional features, as I could.
+</p>
+
+<h2>Teaching Section</h2>
+
+<p>
+    During the teaching section of this topic we followed several tutorials provided by the lecturers, covering topics
+    including: raycasting, linear/angular motion, collision detection/resolution, constraints, spacial accellerators
+    (mainly quadtrees and octrees), AI techniques (state machines, behaviour trees, and pushdown automata), A* pathfinding,
+    and networking.
+</p>
+
+<p>
+    I was able to implement something for most topics covered in the tutorial, though I was unable to get networking in.
+    This was mainly because, while I did complete the tutorial, I decided setting up the networking system to work with
+    game objects would have taken too long, and there was a good chance I wouldn't have even finished it with the time I
+    had when I got around to it. As such I chose to focus on other areas such as optimising the quadtree.
+</p>
+
+<h2>Specification</h2>
+
+<p>
+    For this project we were given two weeks to complete the framework for a simple game with a coherant game loop. We were
+    given the theme of <a href="https://store.steampowered.com/app/265930/Goat_Simulator/">Goat Simulator</a> for part A of
+    the spec, and <a href="https://store.steampowered.com/app/837470/Untitled_Goose_Game/">Untitled Goose Game</a> for part B.
+</p>
+
+<p>
+    The initial code base we were provided with handled all of the rendering for us, and contained a simple scene with various
+    objects (spheres, cubes, as well as a human model and a goose). We also had access to a simple debug system for displaying
+    text and world-space lines on screen. While we were allowed to use our own assets to make the game look nicer, there was no
+    benifit (having already done a graphics module), so my focus was entirely on the physics for this project.
+</p>
+
+<h2>Features</h2>
+
+<p>
+    This section will cover the features as they are in the final product, and will not discuss the tutorials or anything I
+    didn't manage to implement in detail.
+</p>
+<p>
+    Features are roughly in the order they were implemented.
+</p>
+
+<h3>Raycasting</h3>
+
+<p>
+    The first tutorial we were given covered raycasting (not to be confused with ray-tracing), a basic collision detection
+    technique which attempts to find any (or all) objects which collide with a line. Before creating a player object this was
+    useful for drawing a line from the camera to the first viewed object, and applying collision to the point on that object
+    being viewed. This allowed for easy testing of some collision detection/resolution algorithms.
+</p>
+<p>
+    The final game uses raycasting as part of the AI, to determine if the enemy goose can see the player. I will go into more
+    detail on this in the AI section.
+</p>
+<p>
+    I later optimised raycasting with a quadtree (which I will go into more detail about below).
+</p>
+
+<h3>Motion</h3>
+
+<p>
+    Linear motion is handled using Semi-Implicit Euler integration, in which the velocity of an object is updated each frame by
+    the integral of the accelleration (accel \* time since last frame), and then the integral of the updated velocity is used to
+    update the position.
+</p>
+<p>
+    For angular motion the same technique is used to create a torque (force) and an angular velocity to update the rotation of
+    the object.
+</p>
+<p>
+    The player in this game controls like a car, with the character accellerating towards it's facing direction by applying a
+    fixed force. Upon jumping, a random torque is applied to give the player a wonky spin (since this is clearly how real
+    goats act).
+</p>
+
+<h3>Collision Detection/Resolution</h3>
+
+<p>
+    The final game contains several objects scattered around a randomly generated maze. Collision detection is handled for the
+    following volume types:
+</p>
+
+<ul>
+    <li>Ray</li>
+    <li>Sphere</li>
+    <li>Capsule</li>
+    <li>AABB (Axis Aligned Bounding Box)</li>
+    <li>OBB (Object Oriented Bounding Box)</li>
+</ul>
+
+<p>
+    OBB-OBB and OBB-AABB collision detection is handled using separating axis theorems (though I was unable to figure out how to
+    calculate the correct contact points in time, so collision resolution is incorrect for this).
+</p>
+<p>
+    Collision resolution is handled by calculating the impulse based on a single contact point determined during collision detection.
+</p>
+<p>
+    Aside from normal detection/resolution, there are also two additional object types; those being static objects, and trigger
+    volumes. Static objects are treated as having infinite mass (0 inverse mass) and are kept in a separate accelleration structure
+    to dynamic objects (see the quadtree section). Trigger volumes have no collision response associated with them, and call
+    separate on-trigger events (rather than on-collision events) when triggered.
+</p>
+<p>
+    A trigger volume is used on the player character to determine whether or not they are touching the ground, thus allowing for
+    different states of movement, and preventing the player from jumping in mid-air.
+</p>
+
+<img src="/assets/images/masters_physics/CollisionObjects.png" alt="Image of test scene with all collision volumes." width="400" />
+<p>
+    Shown above is a test scene containing all collision volumes. Red cubes are static, and blue cubes are axis aligned.
+</p>
+
+<h3>Quadtree</h3>
+
+<p>
+    The spacial acceleration structure I chose for this project was a quadtree. I chose a quadtree over an octree because I expected
+    very few objects to overlap on the y-axis at a time.
+</p>
+<p>
+    The quadtree uses an object pool for it's entries, storing an array of the maximum number of entries it will ever need for it's
+    given depth (which I have set to seven for this project). This allows for faster iteration over it's contents, since it will
+    better support CPU caching.
+</p>
+<p>
+    In the game world is quadtrees: one for static objects and one for dynamic objects. The dynamic tree is cleared and re-generated
+    every frame, to update it's contents with changes in object positions. On the other hand, the static tree is only ever updated
+    when needed (when a static object is created/destroyed/moved).
+</p>
+<p>
+    Raycasting uses the quadtree to filter which objects a ray might be able to cast onto.
+</p>
+
+<img src="/assets/images/masters_physics/BigScene.png" alt="Image of a large test scene." width="400" />
+
+<p>
+    Shown above is a larger test scene used to determine the performance improvements of using the quadtree. There are a total
+    of 900 objects scattered around, and the performance remains at 60fps (on the University PCs). Without the quadtree enabled this
+    scene becomes much slower.
+</p>
+
+<h3>AI</h3>
+
+<p>
+    My project makes use of all three AI types covered in the tutorials as well as A* pathfinding:
+</p>
+
+<h4>State Machines (NPC)</h4>
+
+<p>
+    The NPCs use simple state machines to determine if the player or the goose is nearby. If they are nearby, the NPC will run in the
+    opposite direction, otherwise they will perform a random walk (simply walking in a slightly varying direction). A spherical trigger
+    volume is used to detect nearby 'objects of fear'.
+</p>
+
+<img src="/assets/images/masters_physics/NPC.png" alt="Image of an NPC." width="400" />
+
+<h4>Pushdown Automata (Enemy)</h4>
+
+<p>
+    The enemy (goose) uses a pushdown automata for it's behaviour, structured as follows:
+</p>
+
+<ul>
+    <li><b>Patrol</b> - By default the enemy will wander to random points in the maze (using A* to find it's way around).</li>
+    <li><b>Chase</b> - If the player is within sight of the enemy (determined using raycasting), then it will chase after until it
+    loses sight or becomes dazed.</li>
+    <li><b>Dazed</b> - If the enemy is struck by the player's laser eyes it will become dazed for a short time, then return to what
+    it was doing before.</li>
+</ul>
+
+<img src="/assets/images/masters_physics/GooseAttack.png" alt="Image of the enemy (goose) attacking the player." width="400" />
+
+<h4>Behaviour Trees (Player Controller)</h4>
+
+<p>
+    The player controller uses a behaviour tree to control state and determine valid input actions.
+</p>
+<p>
+    The player will always be able to shoot their laser eyes and grapple things with their tounge. This event is part of the
+    root parallel node.
+</p>
+<p>
+    A selector node is used to switch between actions the player can take when grounded, and actions for when airborne. When
+    grounded, the player is able to run and jump. When airborne, the player can give no inputs, other than the actions mentioned
+    above.
+</p>
+
+<img src="/assets/images/masters_physics/Lasers.png" alt="Image of the player shooting lasers." width="400" />
+<img src="/assets/images/masters_physics/Tounge.png" alt="Image of the player latching onto a cube with their tounge." width="400" />
+
+<h4>A* Pathfinding</h4>
+
+<p>
+    The enemy makes use of A* pathfinding during it's patrol action to find it's way around the randomly generated maze. A navgrid
+    is generated to match the maze and used to select a valid point on the map to patrol to, then generate a list of waypoints for
+    the enemy to follow. When the enemy gets within a certain radius of each waypoint it will switch to the next one until it reaches
+    it's destination (at which point it selects another random destination).
+</p>
