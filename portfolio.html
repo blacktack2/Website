@@ -5,6 +5,11 @@ title: Portfolio
 
 <div class="portfolio-container">
     {% for item in site.data.portfolio_contents %}
+        <div class="preload-image" style="background-image: url('{{ item.preview }}preview_static.gif');"></div>
+        <div class="preload-image" style="background-image: url('{{ item.preview }}preview.gif');"></div>
+    {% endfor %}
+
+    {% for item in site.data.portfolio_contents %}
         <div class="portfolio-item">
             <a href="{{ item.link }}">
                 <img src="{{ item.preview }}preview_static.gif" alt="{{ item.alt }}" onmouseenter="this.src = '{{ item.preview }}preview.gif'" onmouseleave="this.src = '{{ item.preview }}preview_static.gif'" width="250" height="250" />
