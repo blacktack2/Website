@@ -12,7 +12,9 @@ title: Portfolio
     {% for item in site.data.portfolio_contents %}
         <div class="portfolio-item">
             <a href="{{ item.link }}">
-                <img src="{{ item.preview }}preview_static.gif" alt="{{ item.alt }}" onmouseenter="this.src = '{{ item.preview }}preview.gif'" onmouseleave="this.src = '{{ item.preview }}preview_static.gif'" width="250" height="250" />
+                <div class="portfolio-image" style="background-image: url('{{ item.preview }}preview_static.gif')" alt="{{ item.alt }}"
+                     onmouseenter="this.style.backgroundImage = `url('{{ item.preview }}preview.gif')`"
+                     onmouseleave="this.style.backgroundImage = `url('{{ item.preview }}preview_static.gif')`"></div>
                 <br />
                 <p class="portfolio-title">{{ item.title }}</p>
             </a>

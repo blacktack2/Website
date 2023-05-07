@@ -13,6 +13,15 @@
 }
 
 .portfolio-item {
+  width: 250px;
+  
   padding: 10px;
   text-align: center;
+}
+
+.portfolio-image {
+  width: 100%;
+  height: 250px;
+  background-size: cover;
+  background-position: center;
 }
