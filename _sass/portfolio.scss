@@ -13,15 +13,18 @@
 }
 
 .portfolio-item {
+  position: relative;
   width: 250px;
   
   padding: 10px;
   text-align: center;
 }
 
-.portfolio-image {
-  width: 100%;
+.portfolio-preview, .portfolio-preview img, .portfolio-preview video {
+  object-fit: cover;
+  width: 250px;
   height: 250px;
+
   background-size: cover;
   background-position: center;
 }

@@ -12,12 +12,23 @@ title: Portfolio
     {% for item in site.data.portfolio_contents %}
         <div class="portfolio-item">
             <a href="{{ item.link }}">
-                <div class="portfolio-image" style="background-image: url('{{ item.preview }}preview_static.gif')" alt="{{ item.alt }}"
-                     onmouseenter="this.style.backgroundImage = `url('{{ item.preview }}preview.gif')`"
-                     onmouseleave="this.style.backgroundImage = `url('{{ item.preview }}preview_static.gif')`"></div>
+                <div class="portfolio-preview">
+                    <video src="/assets/videos/{{ item.video }}" muted loop autoplay></video>
+                    <img src="/assets/images/{{ item.image }}" alt="Image preview missing" />
+                </div>
                 <br />
                 <p class="portfolio-title">{{ item.title }}</p>
             </a>
         </div>
     {% endfor %}
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(".portfolio-preview").on("mouseenter", function() {
+        $(this).children("video").show();
+        $(this).children("img").hide();
+    }).on("mouseleave", function() {
+        $(this).children("img").show();
+        $(this).children("video").hide();
+    }).children("video").hide();
+</script>
