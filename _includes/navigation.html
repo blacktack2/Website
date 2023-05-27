@@ -1,6 +1,8 @@
 <div class="main-navigation">
   <h1 class="main-title">Stuart Lewis</h1>
-  {% for item in site.data.navigation reversed %}
-    <button class="btn-navigation{% if page.url==item.link %} btn-selected{% endif %}" onclick="window.location.href='{{ site.baseurl }}{{ item.link }}'">{{ item.name }}</button>
-  {% endfor %}
+  <div class="main-nav-panel">
+    {% for item in site.data.navigation %}
+      <button class="btn-navigation{% if page.url==item.link %} btn-selected{% endif %}" onclick="window.location.href='{{ site.baseurl }}{{ item.link }}'">{{ item.name }}</button>
+    {% endfor %}
+  </div>
 </div>

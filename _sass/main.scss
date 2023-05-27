@@ -1,7 +1,15 @@
 
 :root {
+  --bg-main: #ffffff;
+  --bg-body: #e6e6ff;
+  
   --fg-header: #000000;
   --fg-text: #000044;
+
+  --btn-bg: #000000;
+  --btn-fg: #ffffff;
+  --btn-bg-selected: #cccccc;
+  --btn-fg-selected: #000000;
 }
 
 html {
@@ -20,12 +28,17 @@ body {
   font-family: arial;
   font-size: 18px;
 
-  background-color: #aaaaaa;
+  background-color: var(--bg-body);
   color: var(--fg-text);
 }
 
-p {
-  
+p:hover {
+  position: relative;
+  transform: scale(1.2);
+
+  background-color: var(--bg-main);
+
+  transition: transform 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -65,7 +78,7 @@ h6 {
   top: 0;
   height: 100vh;
 
-  background-color: #000000;
+  background-color: var(--bg-body);
 }
 .banner.banner-left {
   grid-column: 1;
@@ -78,24 +91,32 @@ h6 {
   grid-column: 2;
 
   min-height: 100vh;
-  overflow-y: auto;
 
   margin: 0px;
   padding: 10px;
+
+  background-color: var(--bg-main);
+
+  border: 3px solid #000000;
 }
 
 .main-navigation {
   overflow: hidden;
 
   margin: 0px;
-  padding: 10px;
+  padding: 0px;
+}
 
-  background-color: #888888;
+.main-nav-panel {
+  margin: 0px;
+  padding: 4px;
+  
+  background-color: #b7b7ff;
   border: 3px solid #000000;
 }
 
 .main-title {
-  float: left;
+  width: 100%;
 
   margin: 0px;
   padding: 0px;
@@ -114,17 +135,16 @@ h6 {
 }
 
 .btn-navigation {
-  float: right;
   height: 100%;
 
   padding: 2px;
-  margin: 0px 5px 0px 0px;
+  margin: 0px 10px 0px 0px;
   
   font-size: 30px;
 
-  color: #ffffff;
-  background-color: #333333;
-  border: 2px ridge #000000;
+  color: var(--btn-fg);
+  background-color: var(--btn-bg);
+  border: 4px ridge var(--btn-bg);
 
   transition: transform 0.3s ease;
 }
@@ -132,9 +152,13 @@ h6 {
   transform: scale(1.1) rotate(-2deg);
 }
 .btn-navigation.btn-selected {
-  color: #222222;
-  background-color: #888888;
-  border: 2px groove #000000;
+  color: var(--btn-fg-selected);
+  background-color: var(--btn-bg-selected);
+  border: 4px groove var(--btn-bg);
+  transform: scale(1.1);
+}
+.btn-navigation.btn-selected:hover {
+  transform: scale(1.1) rotate(-2deg);
 }
 
 .preload-image {
