@@ -28,3 +28,14 @@
   background-size: cover;
   background-position: center;
 }
+
+.portfolio-preview {
+  border: 4px solid black;
+}
+
+.portfolio-preview.with-video {
+  border-color: #00ff0066;
+}
+.portfolio-preview.without-video {
+  border-color: #ffff0066;
+}
