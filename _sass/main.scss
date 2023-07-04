@@ -60,6 +60,17 @@ h6 {
 
 }
 
+code {
+  display: block;
+  padding: 4px;
+
+  white-space: pre-wrap;
+
+  color: #000000;
+  background-color: #dddddd;
+  border: 2px solid #bbbbbb;
+}
+
 .main-container {
   display: contents;
 }

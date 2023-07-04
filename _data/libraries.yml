@@ -3,6 +3,10 @@ DearImGui:
   desc: GUI library for creating UI widgets on top of a window.
         Generally used for debug windows, but can be used for application layout (as I often do).
   link: https://github.com/ocornut/imgui
+ImGuiNodeEditor:
+  name: imgui-node-editor
+  desc: Wrapper library for Dear ImGui for handling displaying and interfacing with graph-based editors.
+  link: https://github.com/ocornut/imgui
 Glad:
   name: glad
   desc: Library for interfacing with the GPU through OpenGL.
@@ -21,3 +25,7 @@ STB:
   name: stb
   desc: Utility library for reading and writing textures/images.
   link: https://github.com/nothings/stb
+NFD:
+  name: nativefiledialog
+  desc: Utility library for creating platform-native file choose dialogs.
+  link: https://github.com/mlabbe/nativefiledialog

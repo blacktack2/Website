@@ -4,3 +4,157 @@ title: Masters Final Project (GLSandbox)
 repo: https://github.com/blacktack2/GLSandbox
 ---
 
+<img src="/assets/images/masters_final/DeferredTeapot.png" alt="Example image of the GLSandbox application" height="400" />
+
+<p>
+    For the final project for my Masters course (MSComp Computer Science - Game Engineering 4<sup>th</sup> year), I made
+    an application designed to allow the creation of full render-pipelines through a graph-based interface. Since I go over
+    this project in a lot of detail with my dissertation I will mainly focus on getting across a general idea of the project
+    and some implementation details on this page. A link to the full dissertation can be found <a href="#header-dissertation">below</a>.
+</p>
+<p>
+    I received <strong>74% (first class)</strong> for this submission.
+</p>
+
+<h2 id="header-specification">Specification</h2>
+
+<p>
+    The initial goal for the 8 week long project was to create an application which could support a simple deferred render-pipeline
+    by solely using a graph-based editor to program it. This goal has since been refined into a list of requirements for a minimum
+    specification as follows:
+</p>
+
+<ul>
+    <li>Must have an application window with a graph-editor panel and a space to render the final pipeline</li>
+    <li>Must be able to build a render-pipeline by linking relevant mesh, shader, and uniform nodes to a render-pass node</li>
+    <li>Must be able to handle any valid user-specified shader or mesh</li>
+    <li>Must have enough functionality to allow the creation of a (simple) deferred render-pipeline</li>
+    <li>Must have a systeme for handling sub-graphs</li>
+    <li>Must have a method of comparing performance of a graph with an equivalently hard-coded pipeline</li>
+    <li>Must include example scenes which can be used to showcase the utility and performance of the tool</li>
+</ul>
+
+<p>
+    These requirements are gone over in more detail in my <a href="#header-dissertation">dissertation</a>.
+</p>
+
+<h2 id="header-libraries">Libraries</h2>
+
+<table>
+    {% include library_description.html lib=site.data.libraries.DearImGui %}
+    {% include library_description.html lib=site.data.libraries.ImGuiNodeEditor %}
+    {% include library_description.html lib=site.data.libraries.Glad %}
+    {% include library_description.html lib=site.data.libraries.GLM %}
+    {% include library_description.html lib=site.data.libraries.SDL2 %}
+    {% include library_description.html lib=site.data.libraries.NFD %}
+    {% include library_description.html lib=site.data.libraries.STB %}
+</table>
+
+<h2 id="header-examples">Examples</h2>
+
+<p>Showcase of a simple pipeline being created from scratch</p>
+<video src="/assets/videos/masters_final/SimpleBuild.mp4" controls="controls"></video>
+<p>Showcase of a deferred pipeline being configured live:</p>
+<video src="/assets/videos/masters_final/Deferredteapot.mp4" controls="controls"></video>
+<p>Showcase of how the input system works:</p>
+<video src="/assets/videos/masters_final/Inputs.mp4" controls="controls"></video>
+
+<h2 id="header-implementation">Implementation</h2>
+
+<h3>Graph Editor</h3>
+
+<p>
+    From a user perspective, a pipeline is created by adding, configuring, and linking nodes in the graph with each
+    node representing a graphical component or logical operation. As of writing the project contains the following nodes:
+</p>
+
+<img src="/assets/images/masters_final/AllNodes.png" alt="Image showcasing all nodes" width="600" />
+
+<ul>
+    <li>Entry - Entry point of the graph where flow-control begins.</li>
+    <li>Input - Value input for a sub-graph.</li>
+    <li>Output - Value output for a sub-graph.</li>
+    <li>Sub-Graph - Wrapper containing the functionality of an entire user-defined graph.</li>
+    <li>Render Pass - Single draw call containing at least a shader and a mesh.</li>
+    <li>Loop - For-style loop for logical flow control.</li>
+    <li>Arithmetic - Addition, subtraction, multiplication, and division of numerical data types.</li>
+    <li>Integer - Whole number data type.</li>
+    <li>IVecN - N-component integer vector (N = 2~4).</li>
+    <li>Float - Decimal number data type.</li>
+    <li>VecN - N-component float vector (N = 2~4).</li>
+    <li>MatrixN - NxN float matrix (N = 2~4)</li>
+    <li>UV - 2 component float vector with values clamped between 0-1, representing texture coordinates.</li>
+    <li>Colour - 3 component float vector with values clamped between 0-1, representing RGB colour.</li>
+    <li>Direction - 3 component float vector with values normalized into a direction vector (vector of length 1).</li>
+    <li>Model - 4x4 matrix representing the position, rotation, and scale of an object</li>
+    <li>View - 4x4 matrix representing the position, and rotation of the camera.</li>
+    <li>Projection - 4x4 matrix defining the perspective of the camera.</li>
+    <li>Mesh - Vertex data to be sent to the GPU, representing an object in the scene.</li>
+    <li>Shader - Program to be sent to the GPU to operate on a mesh.</li>
+    <li>Texture - Empty image, mainly for writing to (used frequently in deferred-rendering and post-processing)</li>
+    <li>Texture (from file) - Texture loaded from a file.</li>
+    <li>Framebuffer - For defining which textures to write to, or the backbuffer (screen) if not used.</li>
+    <li>Screen Bounds - Stays updated with the size of the window, allowing for dynamic calculations requiring aspect-ratio.</li>
+</ul>
+
+<h3>Sub-Graphs</h3>
+
+<p>
+    Sub-graphs allow for complex functionality to be collapsed into a single node. The images below showcase how this can
+    be helpful, with the image on the right using sub-graphs to simplify the constant parts of each render-pass (such as
+    the shader and mesh) into a single node:
+</p>
+
+<table>
+    <tr>
+        <td>
+            <img src="/assets/images/masters_final/GLSandboxDeferredTeapot.png" alt="Image showcasing a deferred render-pipeline" width="400" />
+        </td>
+        <td>
+            <img src="/assets/images/masters_final/GLSandboxDeferredSubGraph.png" alt="Image showcasing a deferred render-pipeline using sub-graphs" width="400" />
+        </td>
+    </tr>
+</table>
+
+<p>
+    Implementing this proved surprisingly simple, since I had already implemented a system for serializing and deserializing graphs.
+    All that needed doing was to load the second graph and link it's input nodes with the sub-graph node's ports.
+</p>
+
+<h3>Meshes</h3>
+
+<p>
+    One of the design goals I set myself for this project was to allow the user complete control over each aspect of
+    the pipeline, where possible. To abide this goal I created a custom format for writing meshes to a file with any
+    attribute the user may want. For example, the more commonly used
+    <a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">Wavefront .obj</a> format supports positions, uvs, normals,
+    and indices. If the user happens to require additional attributes like tangents, they can only calculate them from
+    the existing data, without being able to save any per-vertex alterations needed for their application.
+</p>
+<p>
+    My custom format (stored as .msh) works by assigning each attribute a unique name and type, then saving those followed by
+    the actual data. For example, a quad with position and texture coordinates may look like the following:
+</p>
+<code># GLSandbox MSH File: /home/blacktack2/Documents/Rep/GLSandbox/cmake-build-debug/Meshes/Mesh1.msh
+4 0 1
+position 3 f 0
+1 1 -1
+-1 1 -1
+1 -1 -1
+-1 -1 -1
+uv 2 f 1
+1 1
+0 1
+1 0
+0 0
+</code>
+<code># GLSandbox MSH File humanicated
+num-vertices num-indices type
+attr-name num-components data-type binding-index
+component-1...
+...
+</code>
+
+<h2 id="header-dissertation">Dissertation</h2>
+
+<a href="https://github.com/blacktack2/Website/blob/main/assets/documents/StuartLewis_CSC8498_Dissertation.pdf" download>view/download pdf here</a>
