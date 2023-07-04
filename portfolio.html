@@ -4,35 +4,42 @@ title: Portfolio
 ---
 
 <p>
-    Hover over an image to run a preview video.
+    Hover over an image with a green border to play a preview
 </p>
 
 <div class="portfolio-container">
     {% for item in site.data.portfolio_contents %}
-        <div class="preload-image" style="background-image: url('{{ item.preview }}preview_static.gif');"></div>
-        <div class="preload-image" style="background-image: url('{{ item.preview }}preview.gif');"></div>
+    <div class="preload-image" style="background-image: url('{{ item.preview }}preview_static.gif');"></div>
+    <div class="preload-image" style="background-image: url('{{ item.preview }}preview.gif');"></div>
     {% endfor %}
 
     {% for item in site.data.portfolio_contents %}
-        <div class="portfolio-item">
-            <a href="{{ item.link }}">
-                <div class="portfolio-preview">
-                    <video src="/assets/videos/{{ item.video }}" muted loop autoplay></video>
-                    <img src="/assets/images/{{ item.image }}" alt="Image preview missing" />
-                </div>
-                <br />
-                <p class="portfolio-title">{{ item.title }}</p>
-            </a>
-        </div>
+    <div class="portfolio-item">
+        <a href="{{ item.link }}">
+            <div class="portfolio-preview {% if item.video == nil %}without-video{% else %}with-video{% endif %}">
+                {% if item.video != nil %}
+                <video src="/assets/videos/{{ item.video }}" alt="No video preview available" muted loop autoplay></video>
+                {% endif %}
+                <img src="/assets/images/{{ item.image }}" alt="No image preview available" />
+            </div>
+            <br />
+            <p class="portfolio-title">{{ item.title }}</p>
+        </a>
+    </div>
     {% endfor %}
 </div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
     $(".portfolio-preview").on("mouseenter", function() {
-        $(this).children("video").show();
-        $(this).children("img").hide();
+        if ($(this).children("video").length) {
+            $(this).children("video").show();
+            $(this).children("img").hide();
+        }
     }).on("mouseleave", function() {
-        $(this).children("img").show();
-        $(this).children("video").hide();
+        if ($(this).children("video").length) {
+            $(this).children("img").show();
+            $(this).children("video").hide();
+        }
     }).children("video").hide();
 </script>
